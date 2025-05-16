@@ -1,0 +1,10 @@
+for repo in repo_ids:
+    # Ensure that there are matching rows
+    filtered_positions = Positions1[Positions1["Security ID"] == repo]
+    
+    if not filtered_positions.empty:
+        first_price = filtered_positions["Price"].iloc[0]
+        # Apply the first price to all rows matching the repo
+        Positions1.loc[Positions1["Security ID"] == repo, "Price"] = first_price
+    else:
+        print(f"No matching rows for repo: {repo}")
