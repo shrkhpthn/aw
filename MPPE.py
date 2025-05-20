@@ -67,7 +67,7 @@ try:
     
     Trades1R = Trades1Rt.copy()
     #print(Trades1R)
-    Trades1R["Concat_Inst"] = Trades1R["Instrument Type"].fillna('')  + "_" + Trades1R["Instrument SubType"].fillna('') 
+    Trades1R["Concat_Inst"] = Trades1R["Instrument Type"].fillna('')  + "_" + Trades1R["InstrumentSubtype"].fillna('') 
     Trades1R["Concat_PM_TR"] = Trades1R["RiskTaker"].apply(str)   + "_+_" +  Trades1R["Trader"].apply(str) 
     Trades1R = Trades1R.loc[Trades1R['Status'] == "New"]
     Trades1R = Trades1R.reset_index(drop=True)
@@ -112,11 +112,11 @@ if Trade_imported == "Yes":
 
     
     #CCs CHECK
-    if (Trades1R.loc[~Trades1R["Clearing Counterparty"].isin(Check_table_1["CCs"])]).shape[0] == 0:
+    if (Trades1R.loc[~Trades1R["ClearingCounterparty"].isin(Check_table_1["CCs"])]).shape[0] == 0:
         Mccs = "OK"
     else:
-        Trader1CCM = Trades1R.loc[~Trades1R["Clearing Counterparty"].isin(Check_table_1["CCs"])]                         ################################## Clearing counterparty is missing
-        Mccs = Trader1CCM['Clearing Counterparty'].drop_duplicates().to_list()
+        Trader1CCM = Trades1R.loc[~Trades1R["ClearingCounterparty"].isin(Check_table_1["CCs"])]                         ################################## Clearing counterparty is missing
+        Mccs = Trader1CCM['ClearingCounterparty'].drop_duplicates().to_list()
         
     print(Mccs)
     
@@ -271,7 +271,9 @@ lista.append([(datetime.datetime.today()- day1).strftime('%d/%m/%Y'),"MPP10","MP
 summa = pd.DataFrame(lista, columns= column1) 
 SummaTotal = pd.concat((SummaTotal,summa), axis=0)
 
-
+# print("Trades1R shape:", Trades1R.shape)
+# print("Trades1R columns:", Trades1R.columns.tolist())
+# print("First rows of Trades1R:\n", Trades1R.head())
 
 # with pd.ExcelWriter('C://Users//'+ os.environ["USERNAME"] +'//ACA Group//Risk MFS - Documents//Current//Cisu Capital/6. Daily Reports/Reconciliation/Cisu_POS_RECON_%s.xlsx' % (datetime.datetime.today()- day1).strftime('%Y%m%d') ) as writer:     
 with pd.ExcelWriter('C://Users//'+ os.environ["USERNAME"] +'//ACA Group//Risk MFS - Documents/Current/MPP&E Capital/6. Daily Reports/Reconciliations/MPPECapital_POS_RECON_%s.xlsx' % (datetime.datetime.today()- day1).strftime('%Y%m%d') ) as writer:     
